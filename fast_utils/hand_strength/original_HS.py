@@ -7,9 +7,12 @@ from numpy import argmax
 from copy import deepcopy
 from itertools import combinations_with_replacement, combinations
 
-
-# Utility function for all_evaluation
 def flush_possible(full_board):
+    """
+    Computes whether or not a flush is possible with the cards in the board. 
+    Args: 
+        full_board: list of int (deuces cards). Despite its name, does not actually have to be a 5-card board (can be 3, 4, or 5 cards)
+    """
     suits = [0,0,0,0]
     suit_conversion = {'d':0, 'c':1, 'h':2, 's':3}
     num_conversion = {0:'d', 1:'c', 2:'h', 3:'s'}
@@ -21,10 +24,18 @@ def flush_possible(full_board):
     if max_suits >= 3:
         return num_conversion[suit_amax], 5-max_suits
     else:
-        return 'n', -1 #flush not possible, null
+        return 'n', -1 
 
-# Evaluating all possible hands for original hand strength to work
 def all_evaluation(full_board, evaluator):
+    """
+    Efficient evaluation of all possible hands on a board.
+    Args:
+        full_board: list of int (deuces cards). Despite its name, does not actually have to be a 5-card board (can be 3, 4, or 5 cards)
+        evaluator: deuces Evaluator object 
+    Returns: 
+        dict of deuces cards with evaluations
+    """
+
     all_hands = {}
     fp = flush_possible(full_board)
     ranks = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2']
@@ -86,8 +97,16 @@ def all_evaluation(full_board, evaluator):
                 
     return all_hands
 
-# Original hand strength. Will be replaced with a faster neural network equivalent, but needed for bootstrapping.
 def original_hand_strength(our_hand, HS_List): 
+    """
+    Computes hand strength of one hand given the evaluation of all possible hands in board.
+    Args:
+        our_hand: list of int (2 deuces cards corresponding to our hand)
+        HS_list: returned from all_evaluation
+    Returns:
+        float: our hand strength
+    """
+
     above = 0
     tied = 0
     behind = 0

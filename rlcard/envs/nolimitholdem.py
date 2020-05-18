@@ -24,7 +24,7 @@ class NolimitholdemEnv(Env):
         self.game = Game()
         super().__init__(config)
         self.actions = Action
-        self.state_shape = [125]#54]
+        self.state_shape = [47]
         # for raise_amount in range(1, self.game.init_chips+1):
         #     self.actions.append(raise_amount)
 
@@ -57,11 +57,7 @@ class NolimitholdemEnv(Env):
         #
         # History features
         # aggression on each street - DONE WITH PAST + CURRENT
-        # 
-
-        # print(state)
-
-        # Better encodings
+   
         encoded_public_cards = encode_multihot(state['public_cards'])
         encoded_private_cards = encode_multihot(state['hand'])
         call_percent = state['to_call']
@@ -79,7 +75,7 @@ class NolimitholdemEnv(Env):
         all_chips = state['all_chips']
 
         obs = encoded_public_cards[0].tolist() + encoded_public_cards[1].tolist()+encoded_private_cards[0].tolist() + encoded_public_cards[1].tolist()+[call_percent,all_in_percent, n_others,position,already_called,need_to_call,pot,EHS_preflop,EHS_postflop,past_aggression, street_aggression,float(my_chips),float(max(all_chips))]
-        obs = np.asarray(obs) #shape (125,)
+        obs = np.asarray(obs)
 
         extracted_state = {}
 

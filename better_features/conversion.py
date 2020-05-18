@@ -1,5 +1,9 @@
 from deuces.card import Card
 
+"""
+Unused convenience functions. 
+"""
+
 def pypoker_to_deuces_str(s):
     return s[1] + s[0].lower()
 

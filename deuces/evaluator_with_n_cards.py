@@ -6,7 +6,10 @@ from .deck import Deck
 from .lookup import LookupTable
 from .evaluator import Evaluator
 
-class EvaluatorN(Evaluator):#modified Evaluator to return hole cards used to make the strongest hand
+class EvaluatorN(Evaluator):
+    """
+    Modified Evaluator to return hole cards used to make the strongest hand
+    """
 
     def _five(self, cards):
         """

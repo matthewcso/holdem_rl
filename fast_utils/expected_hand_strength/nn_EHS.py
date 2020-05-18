@@ -9,12 +9,35 @@ from deuces.deck import Deck
 from itertools import combinations
 
 def encode_ehs(hole_cards, board, en, HS_model):
+    """
+    Encodes hole cards, board for EHS prediction.
+    Args:
+        hole_cards: list of int (deuces cards)
+        board: list of int (deuces cards)
+        en: EvaluatorN object
+        HS_model: keras model (can be hand_strength/HS_model.h5)
+    Returns:
+        list of numeric: encoding for neural network
+    """
     encoded = encode_hs(hole_cards, board, en)
 
     encoded.append(HS_model.predict(np.asarray([encoded]))[0])
     return encoded
 
-def original_EHS(hole_cards, board, en, model,  max_n = 1200, fn = 'auto'): #outdated; was used to bootstrap EHS prediction
+def original_EHS(hole_cards, board, en, model,  max_n = 1200, fn = 'auto'): 
+    """
+    Function used to generate EHS for training the EHS model.
+    Args:
+        hole_cards: list of int (deuces cards)
+        board: list of int (deuces cards)
+        en: EvaluatorN object
+        model: keras model (can be hand_strength/HS_model.h5) for hand strength
+        max_n: maximum number of combinations to consider
+        fn: if 'auto', fill the board such that there are 5 cards. Otherwise, draw that many cards. 
+    Returns:
+        tuple (float, float): EHS, EHS^2
+
+    """
     sample_deck = Deck()
 
     sample_deck.remove(board+hole_cards)
@@ -42,6 +65,17 @@ def original_EHS(hole_cards, board, en, model,  max_n = 1200, fn = 'auto'): #out
     return this_EHS, this_EHSS
 
 def nn_EHS(hole_cards, board, en, HS_model, model):
+    """
+    Predict the EHS using neural network.
+    Args:
+        hole_cards: list of int (deuces cards)
+        board: list of int (deuces cards)
+        en: EvaluatorN object
+        HS_model: keras model (can be hand_strength/HS_model.h5) for hand strength
+        model: keras model (can be expected_hand_strength/EHS_model.h5) for expected hand strength
+    Returns:
+        float: EHS
+    """
     features = np.asarray([encode_ehs(hole_cards, board, en, HS_model)]) 
 
     this_HS = model.predict(features)

@@ -4,6 +4,14 @@ from fast_utils.hand_strength.original_HS import *
 import numpy as np
 
 def encode_hs(hole_cards, board, en):
+    """
+    Encodes the hole cards + board state for neural network approximation.
+    Args:
+        hole_cards, board: lists of int (deuces cards)
+        en: EvaluatorN object from modified deuces
+    Returns:
+        list of ints and floats: neural network encoding
+    """
     suit, necessary = flush_possible(board)
     evaluated, used_cards = en.evaluate(hole_cards, board)
     n_used = 0
@@ -33,6 +41,12 @@ def encode_hs(hole_cards, board, en):
     return encoded_hole_r + encoded_hole_s + encoded_board_r + encoded_board_s + [necessary] + [n_flush] + [n_used]+[evaluated/10000]
 
 def nn_HS(hole_cards, board, en, model):
+    """
+    Predicts the hand strength with neural network. Use train_HS_model.py to retrain.
+    Args: hole_cards, board: lists of int (deuces cards)
+    en: EvaluatorN object from modified deuces
+    model: keras model, can be HS_model.h5
+    """
     features = np.asarray([encode_hs(hole_cards, board, en)]) 
     this_HS = model.predict(features)
 

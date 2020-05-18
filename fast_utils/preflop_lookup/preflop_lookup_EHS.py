@@ -6,6 +6,14 @@ from fast_utils.expected_hand_strength.nn_EHS import *
 from keras.models import load_model
 
 def read_lookup_table(hole_cards, lookup_table):
+    """
+    Reads the preflop lookup table preflop_EHSs.txt.
+    Args: 
+        hole_cards: list of int (deuces cards)
+        lookup_table: read from preflop_EHSs.txt
+    Return:
+        tuple (float, float): EHS, EHS^2
+    """
     sorted_hole = sorted(hole_cards)
     sorted_hole.reverse()
     card_strings = [Card.int_to_str(card) for card in sorted_hole]
